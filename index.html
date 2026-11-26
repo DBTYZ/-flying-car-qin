@@ -1,599 +1,276 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>飞行汽车全方位调研与分析 · 以亿航 EH216-S 为例</title>
-<meta name="description" content="《飞行汽车技术基础》课程作业：以亿航智能 EH216-S 载人 eVTOL 为对象，开展产品定义、技术可行性、应用场景、市场可行性、瓶颈与展望的全方位调研分析。">
-<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@600;900&display=swap">
-<style>
-/* ===================== 基础与变量 ===================== */
-:root{
-  --blue:#1a4d8f; --blue-2:#2f7fc1; --sky:#eaf3fb; --sky-2:#f5f9fd;
-  --ink:#1d2733; --ink-2:#46566a; --muted:#7a8aa0; --line:#dbe7f2;
-  --green:#1f9d6b; --amber:#e8930c; --red:#d9534f; --bg:#f7fafd;
-  --card:#ffffff; --shadow:0 10px 30px rgba(26,77,143,.10); --radius:18px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
-body{
-  font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-  color:var(--ink);background:var(--bg);line-height:1.75;font-size:16px;
-}
-img,svg{max-width:100%;display:block}
-a{color:var(--blue-2);text-decoration:none}
-a:hover{text-decoration:underline}
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-
-/* ===================== 顶部导航 ===================== */
-header.nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.92);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
-}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1120px;margin:0 auto;padding:0 24px}
-.brand{font-weight:900;color:var(--blue);font-size:17px;letter-spacing:.5px}
-.brand span{color:var(--ink-2);font-weight:500}
-nav.menu{display:flex;gap:22px;flex-wrap:wrap}
-nav.menu a{color:var(--ink-2);font-size:14px;font-weight:500}
-nav.menu a:hover{color:var(--blue);text-decoration:none}
-.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--blue-2);width:0}
-.menu-toggle{display:none;background:none;border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer}
-
-/* ===================== Hero ===================== */
-.hero{
-  position:relative;padding:130px 0 70px;overflow:hidden;
-  background:linear-gradient(135deg,#143d6e 0%,#1a4d8f 45%,#2f7fc1 100%);color:#fff;
-}
-.hero::before{
-  content:"";position:absolute;inset:0;
-  background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
-  background-size:44px 44px;mask-image:radial-gradient(ellipse at 70% 20%,#000 30%,transparent 75%);
-}
-.hero-grid{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
-.eyebrow{display:inline-block;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:13px;letter-spacing:1px;margin-bottom:22px}
-.hero h1{font-family:"Noto Serif SC",serif;font-size:40px;line-height:1.3;font-weight:900;margin-bottom:18px}
-.hero p.lead{font-size:17px;color:#dbeafe;max-width:560px;margin-bottom:28px}
-.hero-meta{display:flex;gap:26px;flex-wrap:wrap;font-size:14px;color:#cfe3f7}
-.hero-meta b{display:block;font-size:20px;font-weight:700;color:#fff}
-.hero-art{display:flex;justify-content:center}
-.hero-art svg{filter:drop-shadow(0 18px 30px rgba(0,0,0,.28))}
-
-/* ===================== 通用章节 ===================== */
-section{padding:72px 0}
-section:nth-of-type(even){background:var(--sky-2)}
-.sec-tag{color:var(--blue-2);font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase}
-h2{font-family:"Noto Serif SC",serif;font-size:30px;font-weight:900;color:var(--ink);margin:10px 0 14px}
-.sec-desc{color:var(--ink-2);max-width:720px;margin-bottom:38px}
-h3{font-size:19px;font-weight:700;margin-bottom:12px;color:var(--ink)}
-
-/* 卡片栅格 */
-.grid{display:grid;gap:22px}
-.g2{grid-template-columns:repeat(2,1fr)}
-.g3{grid-template-columns:repeat(3,1fr)}
-.g4{grid-template-columns:repeat(4,1fr)}
-.card{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:26px;box-shadow:var(--shadow);
-}
-.card h3{margin-bottom:10px}
-.card p{color:var(--ink-2);font-size:15px}
-.icon{width:44px;height:44px;border-radius:12px;background:var(--sky);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:22px}
-
-/* 参数表 */
-.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.spec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center}
-.spec .num{font-size:26px;font-weight:900;color:var(--blue)}
-.spec .unit{font-size:13px;color:var(--muted)}
-.spec .lbl{font-size:13px;color:var(--ink-2);margin-top:4px}
-
-/* 表格 */
-.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:680px}
-th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line)}
-th{background:var(--sky);color:var(--blue);font-weight:700;white-space:nowrap}
-tr:last-child td{border-bottom:none}
-td .tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600}
-.tag.ok{background:#e6f6ef;color:var(--green)}
-.tag.warn{background:#fdf3e3;color:var(--amber)}
-.tag.cool{background:#eaf3fb;color:var(--blue-2)}
-
-/* 双栏对照 */
-.vs{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.vs .col{border-radius:var(--radius);padding:28px}
-.vs .good{background:#f0faf5;border:1px solid #cdeedd}
-.vs .bad{background:#fdf3f2;border:1px solid #f6d6d5}
-.vs h3{display:flex;align-items:center;gap:8px}
-.vs ul{list-style:none;margin-top:12px}
-.vs li{padding:8px 0 8px 28px;position:relative;color:var(--ink-2);font-size:15px}
-.vs .good li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
-.vs .bad li::before{content:"!";position:absolute;left:2px;color:var(--red);font-weight:700}
-
-/* 时间线 */
-.timeline{position:relative;margin-left:8px;padding-left:30px}
-.timeline::before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--line)}
-.tl-item{position:relative;padding:0 0 26px}
-.tl-item::before{content:"";position:absolute;left:-29px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--blue-2);border:3px solid #fff;box-shadow:0 0 0 2px var(--blue-2)}
-.tl-item .date{font-weight:700;color:var(--blue);font-size:14px}
-.tl-item .txt{color:var(--ink-2);font-size:15px;margin-top:2px}
-
-/* 阶段流程 */
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
-.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative}
-.step::before{counter-increment:step;content:"阶段 " counter(step);display:inline-block;font-size:12px;font-weight:700;color:#fff;background:var(--blue-2);border-radius:999px;padding:3px 12px;margin-bottom:12px}
-.step h3{font-size:16px}
-.step p{font-size:14px;color:var(--ink-2)}
-
-/* 饼/条示意（纯CSS） */
-.bars{display:grid;gap:18px;margin-top:10px}
-.bar-row{display:grid;grid-template-columns:160px 1fr 90px;gap:14px;align-items:center}
-.bar-row .name{font-size:14px;color:var(--ink-2)}
-.bar-track{height:12px;background:var(--sky);border-radius:999px;overflow:hidden}
-.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-2),var(--blue))}
-.bar-row .val{font-size:13px;font-weight:700;color:var(--blue)}
-
-/* 瓶颈三列 */
-.bott{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.bott .card{border-top:4px solid var(--blue-2)}
-.bott .card.r{border-top-color:var(--red)}
-.bott .card.a{border-top-color:var(--amber)}
-.bott ul{list-style:none;margin-top:10px}
-.bott li{padding:7px 0 7px 22px;position:relative;font-size:14.5px;color:var(--ink-2)}
-.bott li::before{content:"•";position:absolute;left:4px;color:var(--blue-2);font-weight:900}
-
-/* 引用/结论框 */
-.callout{background:linear-gradient(135deg,var(--sky),#e3eef9);border-left:4px solid var(--blue);border-radius:14px;padding:24px 28px;margin-top:30px;color:var(--ink-2)}
-.callout b{color:var(--blue)}
-
-/* 参考 */
-.refs{font-size:14px;color:var(--ink-2)}
-.refs li{padding:8px 0;border-bottom:1px dashed var(--line)}
-.refs li:last-child{border-bottom:none}
-
-footer{background:#12293f;color:#cfe0f0;padding:34px 0;text-align:center;font-size:13px}
-footer b{color:#fff}
-
-/* 回到顶部 */
-#toTop{position:fixed;right:24px;bottom:24px;width:44px;height:44px;border-radius:12px;background:var(--blue);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:var(--shadow);font-size:18px;z-index:90}
-
-/* ===================== 响应式 ===================== */
-@media (max-width:900px){
-  .hero-grid{grid-template-columns:1fr}
-  .g3,.g4,.bott{grid-template-columns:repeat(2,1fr)}
-  .specs{grid-template-columns:repeat(2,1fr)}
-  .steps{grid-template-columns:repeat(2,1fr)}
-  .vs{grid-template-columns:1fr}
-  nav.menu{position:absolute;top:64px;left:0;right:0;background:#fff;flex-direction:column;gap:0;padding:10px 24px;border-bottom:1px solid var(--line);display:none}
-  nav.menu.open{display:flex}
-  nav.menu a{padding:12px 0;border-bottom:1px solid var(--line)}
-  .menu-toggle{display:block}
-  .hero h1{font-size:30px}
-}
-@media (max-width:560px){
-  .g2,.g3,.g4,.bott,.steps,.specs{grid-template-columns:1fr}
-  .bar-row{grid-template-columns:110px 1fr 70px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞行汽车调研分析 - 亿航EH216-S</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #222;
+            line-height: 1.7;
+        }
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #2563eb;
+            width: 0%;
+            z-index: 999;
+        }
+        header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+        header p {
+            opacity: 0.9;
+            font-size: 1.05rem;
+        }
+        nav {
+            background: #ffffff;
+            box-shadow: 0 2px 8px #00000015;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+        .nav-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-wrap a {
+            color: #2563eb;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .nav-wrap a:hover {
+            background: #e8f0fe;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px #0000000c;
+        }
+        h2 {
+            color: #1e40af;
+            margin-bottom: 16px;
+            border-left: 5px solid #2563eb;
+            padding-left: 12px;
+        }
+        h3 {
+            margin: 18px 0 10px;
+            color: #334155;
+        }
+        ul, ol {
+            padding-left: 24px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        table th {
+            background-color: #eff6ff;
+        }
+        .tip-good {
+            background: #dcfce7;
+            border-left: 5px solid #22c55e;
+            padding:12px;
+            margin:12px 0;
+        }
+        .tip-bad {
+            background: #fee2e2;
+            border-left:5px solid #ef4444;
+            padding:12px;
+            margin:12px 0;
+        }
+        footer {
+            text-align:center;
+            padding:24px;
+            color:#666;
+            font-size:0.9rem;
+        }
+    </style>
 </head>
 <body>
-
-<!-- ===================== 导航 ===================== -->
-<header class="nav">
-  <div class="nav-inner">
-    <div class="brand">飞行汽车调研 <span>· EH216-S</span></div>
-    <button class="menu-toggle" onclick="document.getElementById('menu').classList.toggle('open')" aria-label="菜单">☰</button>
-    <nav class="menu" id="menu">
-      <a href="#def">定义与分类</a>
-      <a href="#product">产品概览</a>
-      <a href="#compare">同类对比</a>
-      <a href="#tech">技术可行性</a>
-      <a href="#scene">应用场景</a>
-      <a href="#market">市场可行性</a>
-      <a href="#bottleneck">瓶颈与伦理</a>
-      <a href="#future">展望</a>
+    <div class="progress-bar" id="progress"></div>
+    <header>
+        <h1>飞行汽车全方位调研与分析 — 亿航 EH216-S</h1>
+        <p>《飞行汽车技术基础》课程作业 | 技术可行性 · 应用场景 · 市场可行性分析</p>
+    </header>
+    <nav>
+        <div class="nav-wrap">
+            <a href="#def">定义与分类</a>
+            <a href="#product">产品概览</a>
+            <a href="#tech">技术可行性</a>
+            <a href="#scene">应用场景</a>
+            <a href="#market">市场可行性</a>
+            <a href="#limit">瓶颈与挑战</a>
+            <a href="#ref">参考资料</a>
+        </div>
     </nav>
-  </div>
-  <div class="progress" id="progress"></div>
-</header>
-
-<!-- ===================== Hero ===================== -->
-<div class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="eyebrow">《飞行汽车技术基础》课程作业 · 全方位调研与分析</span>
-      <h1>从地面到低空：<br>以亿航 EH216-S 透视飞行汽车产业化</h1>
-      <p class="lead">本报告以全球首款取得载人型号合格证的无人驾驶 eVTOL——亿航智能 EH216-S 为调研对象，围绕产品定义、技术可行性、应用场景、市场可行性、现存瓶颈与未来方向展开系统分析。</p>
-      <div class="hero-meta">
-        <div><b>2 座</b>载人构型</div>
-        <div><b>16 桨</b>8 轴共轴双旋翼</div>
-        <div><b>30 km</b>最大航程</div>
-        <div><b>130 km/h</b>最大设计速度</div>
-      </div>
+    <div class="container">
+        <section id="def">
+            <h2>一、产品定义与分类</h2>
+            <h3>1. 定义</h3>
+            <p>狭义飞行汽车：面向智慧立体交通，电动、智能、垂直起降的陆空两栖汽车。<br>广义飞行汽车：低空智能交通运载工具，分为两类：</p>
+            <ul>
+                <li>陆空两栖飞行汽车：同时具备地面行驶、空中飞行能力</li>
+                <li>电动垂直起降飞行器eVTOL：纯飞行，无地面行驶（本次调研对象 EH216-S 属于此类）</li>
+            </ul>
+            <h3>2. 起降方式分类</h3>
+            <ul>
+                <li>滑跑起降（固定翼）：需要跑道，代表 KleinVision AirCar</li>
+                <li>垂直起降：多旋翼、倾转旋翼、涵道风扇，代表：亿航EH216-S、小鹏汇天、Joby</li>
+            </ul>
+            <h3>3. 和直升机、无人机对比</h3>
+            <table>
+                <tr>
+                    <th>品类</th>
+                    <th>定位</th>
+                    <th>运载对象</th>
+                </tr>
+                <tr>
+                    <td>直升机</td>
+                    <td>传统通航工具，运营成本高</td>
+                    <td>载人</td>
+                </tr>
+                <tr>
+                    <td>eVTOL飞行汽车</td>
+                    <td>新型大众低空立体交通</td>
+                    <td>载人，面向空中出租、文旅</td>
+                </tr>
+                <tr>
+                    <td>工业无人机</td>
+                    <td>行业作业设备</td>
+                    <td>巡检、测绘、小件物流</td>
+                </tr>
+            </table>
+        </section>
+        <section id="product">
+            <h2>二、亿航 EH216-S 产品概览</h2>
+            <ul>
+                <li>构型：8轴16桨多旋翼eVTOL，全自动无人驾驶，双人座舱</li>
+                <li>航程：约30km，最大飞行速度130km/h</li>
+                <li>核心亮点：全球首款拿到载人eVTOL型号合格证的飞行器</li>
+                <li>落地场景：景区低空观光、封闭空域示范运营</li>
+            </ul>
+            <div class="tip-bad">局限：航程较短，不具备地面行驶能力，仅适合封闭空域，无法直接在开放城市空域大规模运营</div>
+        </section>
+        <section id="tech">
+            <h2>三、技术可行性分析</h2>
+            <h3>✅ 已具备可行性</h3>
+            <div class="tip-good">
+                <ul>
+                    <li>多旋翼总体构型成熟，大量复用无人机飞控、新能源汽车三电供应链</li>
+                    <li>电机、电池、感知传感器硬件成熟，FMEA、FTA安全仿真工具链完善</li>
+                    <li>全自动无人驾驶，不需要飞行员，降低人为操作风险</li>
+                </ul>
+            </div>
+            <h3>❌ 当前技术短板</h3>
+            <div class="tip-bad">
+                <ul>
+                    <li>电池能量密度瓶颈：纯电方案航程短，难以满足远距离通勤</li>
+                    <li>载人适航标准极高：航空要求失效概率 10⁻⁹，全系统冗余设计难度大</li>
+                    <li>城市低空环境复杂：楼宇遮挡GNSS、大气乱流、障碍物密集，全天候避障与调度难度高</li>
+                </ul>
+            </div>
+            <p>结论：样机技术验证可行，但距离开放城市大规模商业化仍存在明显技术瓶颈，优先适合封闭空域示范。</p>
+        </section>
+        <section id="scene">
+            <h2>四、应用场景分析</h2>
+            <h3>1. 专业化优先落地场景（B/G端）</h3>
+            <ul>
+                <li>应急救援、山地医疗转运</li>
+                <li>电力、油气管道巡检，农林作业</li>
+                <li>海岛、山区物资投送</li>
+            </ul>
+            <h3>2. 大众化场景四阶段演进</h3>
+            <ol>
+                <li>阶段1（当前）：低空文旅观光（EH216-S主力场景）</li>
+                <li>阶段2：机场、高铁站短途枢纽接驳</li>
+                <li>阶段3：城市群短途城际出行</li>
+                <li>阶段4：城市立体交通网络，和地铁公交融合</li>
+            </ol>
+        </section>
+        <section id="market">
+            <h2>五、市场可行性分析</h2>
+            <h3>有利条件</h3>
+            <ul>
+                <li>低空经济上升为国家战略，国内适航试点开放，EH216-S形成中国适航样本</li>
+                <li>国内锂电、电机、复合材料供应链优势明显</li>
+                <li>大城市地面拥堵催生立体出行需求，文旅、应急场景刚需明确</li>
+            </ul>
+            <h3>市场制约风险</h3>
+            <ul>
+                <li>单机造价高昂，量产规模不足，成本很难快速下降</li>
+                <li>垂直起降场（Vertiport）、低空充电等基础设施严重欠缺</li>
+                <li>空域动态调度、运营法规、事故保险责任体系仍在建设</li>
+            </ul>
+            <p>结论：长期市场潜力巨大；短期以B/G端示范项目为主，C端个人消费市场尚处于早期培育阶段。</p>
+        </section>
+        <section id="limit">
+            <h2>六、核心瓶颈：安全、商业、伦理</h2>
+            <ul>
+                <li><strong>安全</strong>：恶劣气象适应性、空中故障应急、坠撞防护、网络信息安全</li>
+                <li><strong>商业</strong>：基建投资回报周期长、运营资质复杂、运维体系不完善</li>
+                <li><strong>伦理社会</strong>：噪声扰民、空域公平、隐私泄露、空中通行权责划分</li>
+            </ul>
+            <h3>未来研究方向</h3>
+            <p>高能量密度电池/混动动力、多机协同低空调度、轻量化耐坠结构、低噪声推进系统、适航安全体系。</p>
+        </section>
+        <section id="ref">
+            <h2>七、参考资料</h2>
+            <ul>
+                <li>https://lab.autozyx.com/fundamentals-of-flying-vehicle-technology/tesla-flying-roadster/</li>
+                <li>亿航智能官方公开资料、民航局EH216-S适航审定公告</li>
+                <li>低空经济产业白皮书、Allied Market Research飞行汽车市场报告</li>
+            </ul>
+        </section>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <!-- SVG 示意：多旋翼载人 eVTOL -->
-      <svg width="360" height="300" viewBox="0 0 360 300" fill="none">
-        <ellipse cx="180" cy="262" rx="120" ry="14" fill="rgba(255,255,255,.12)"/>
-        <!-- 机臂 -->
-        <g stroke="#dbeafe" stroke-width="7" stroke-linecap="round">
-          <line x1="180" y1="150" x2="70" y2="90"/>
-          <line x1="180" y1="150" x2="290" y2="90"/>
-          <line x1="180" y1="170" x2="60" y2="200"/>
-          <line x1="180" y1="170" x2="300" y2="200"/>
-        </g>
-        <!-- 旋翼 -->
-        <g fill="#fff" opacity=".9">
-          <g><ellipse cx="70" cy="84" rx="34" ry="6"/><ellipse cx="70" cy="84" rx="6" ry="34"/></g>
-          <g><ellipse cx="290" cy="84" rx="34" ry="6"/><ellipse cx="290" cy="84" rx="6" ry="34"/></g>
-          <g><ellipse cx="60" cy="196" rx="30" ry="6"/><ellipse cx="60" cy="196" rx="6" ry="30"/></g>
-          <g><ellipse cx="300" cy="196" rx="30" ry="6"/><ellipse cx="300" cy="196" rx="6" ry="30"/></g>
-        </g>
-        <!-- 机身舱体 -->
-        <path d="M140 130 Q180 108 220 130 L228 178 Q180 200 132 178 Z" fill="#f8fbff"/>
-        <path d="M152 138 Q180 124 208 138 L210 160 Q180 170 150 160 Z" fill="#1a4d8f" opacity=".85"/>
-        <rect x="150" y="186" width="60" height="10" rx="5" fill="#dbeafe"/>
-      </svg>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== 1 定义与分类 ===================== -->
-<section id="def">
-  <div class="wrap">
-    <div class="sec-tag">01 · 产品定义与分类</div>
-    <h2>什么是飞行汽车？</h2>
-    <p class="sec-desc">飞行汽车是面向空地一体交通的电动垂直起降飞行器，是航空器为适配立体交通而生、引领未来的新型交通物种。它一方面推动航空运输从“小众专业”走向“大众日常”，另一方面把地面交通的电动化、智能化、网联化优势拓展至低空三维空间。</p>
-
-    <div class="grid g3">
-      <div class="card">
-        <div class="icon">🛩️</div>
-        <h3>纯飞式 eVTOL</h3>
-        <p>无地面行驶功能，依靠旋翼/涵道/倾转旋翼实现垂直起降与空中飞行，是当前技术验证与示范运营的主流形态，EH216-S 即属此类。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🔗</div>
-        <h3>分体式飞行汽车</h3>
-        <p>由陆行底盘与独立飞行体组成，路面行驶时收纳飞行体，到达起降点后分离升空，兼顾个人通勤与空中出行。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🚗</div>
-        <h3>两栖式飞行汽车</h3>
-        <p>同一载体既可以在公路行驶，又可以展开机翼/旋翼升空，结构复杂、对重量与可靠性要求极高，代表为固定翼滑跑构型。</p>
-      </div>
-    </div>
-
-    <div class="table-wrap" style="margin-top:34px">
-      <table>
-        <thead>
-          <tr><th>对比维度</th><th>直升机</th><th>飞行汽车（eVTOL）</th><th>消费/工业无人机</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>产品定位</td><td>专业 / 特种工具</td><td>公共 / 商用运载工具</td><td>行业 / 消费级设备</td></tr>
-          <tr><td>技术代际</td><td>机械飞控、燃油动力</td><td>电传飞控、新能源动力</td><td>电传飞控、新能源动力</td></tr>
-          <tr><td>成本约束</td><td>购置与运营成本极高</td><td>目标汽车级成本、航空级安全</td><td>成本较低</td></tr>
-          <tr><td>运载对象</td><td>以载人为主，兼顾特种货运</td><td>核心载人，兼顾高端即时物流</td><td>以载货、巡检测绘等特种任务为主</td></tr>
-          <tr><td>驾驶模式</td><td>有人驾驶</td><td>终极形态为无人驾驶</td><td>遥控飞行</td></tr>
-          <tr><td>运营监管</td><td>严格的通用航空管理体系</td><td>需创建“城市低空交通”全新监管类别</td><td>已初步形成无人驾驶航空器监管体系</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout">
-      <b>动力路线判断：</b>产业呈现“纯电先行、混动主导、氢能远期、多元并行”的格局——纯电适合短途、低负荷的文旅观光场景；混动面向中长途、高负荷的城际出行；氢能则作为远期零碳长滞空场景的补充。
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 2 产品概览 ===================== -->
-<section id="product">
-  <div class="wrap">
-    <div class="sec-tag">02 · 调研对象：EH216-S 产品概览</div>
-    <h2>亿航智能 EH216-S</h2>
-    <p class="sec-desc">EH216-S 是一款可搭载 2 名乘员的全电动无人驾驶航空器系统，由航空器、地面控制站与数据链路三部分组成，按预设航线全程自动飞行，机上不设驾驶员与操纵装置，主要面向城市空中交通（UAM）环境的商业载客运行。</p>
-
-    <div class="specs">
-      <div class="spec"><div class="num">2</div><div class="unit">座</div><div class="lbl">乘员座位数</div></div>
-      <div class="spec"><div class="num">650</div><div class="unit">kg</div><div class="lbl">最大起飞重量</div></div>
-      <div class="spec"><div class="num">130</div><div class="unit">km/h</div><div class="lbl">最大设计速度</div></div>
-      <div class="spec"><div class="num">30</div><div class="unit">km</div><div class="lbl">最大航程</div></div>
-      <div class="spec"><div class="num">25</div><div class="unit">min</div><div class="lbl">最大航时</div></div>
-      <div class="spec"><div class="num">16</div><div class="unit">桨</div><div class="lbl">8 轴共轴双旋翼</div></div>
-      <div class="spec"><div class="num">12</div><div class="unit">组</div><div class="lbl">动力电池组</div></div>
-      <div class="spec"><div class="num">3</div><div class="unit">套</div><div class="lbl">独立飞控冗余</div></div>
-    </div>
-
-    <div class="grid g2" style="margin-top:34px">
-      <div class="card">
-        <h3>构型与动力</h3>
-        <p>采用 8 轴 8 对旋翼布局，16 套电机与螺旋桨由 12 组动力电池驱动，通过差异转速实现垂直起降与飞行操纵；机身大量使用碳纤维复合材料，搭配滑橇式起落架与鸥翼式舱门。</p>
-      </div>
-      <div class="card">
-        <h3>安全与冗余设计</h3>
-        <p>配备三套独立飞控与表决机制，关键部件多套备份；内置 Fail-Safe 系统实时监测健康状态，智能判断续飞或应急就近降落；通信双重保障、独立密钥加密，并由地面指挥调度系统集群管理与应急介入。</p>
-      </div>
-    </div>
-
-    <h3 style="margin:38px 0 18px">适航与商业化关键节点</h3>
-    <div class="timeline">
-      <div class="tl-item"><div class="date">2020.12</div><div class="txt">向中国民航局（CAAC）提交型号合格证（TC）申请，2021 年 1 月受理。</div></div>
-      <div class="tl-item"><div class="date">2022.02</div><div class="txt">民航局发布 EH216-S 型无人驾驶航空器系统专用条件，确立载人 eVTOL 的适航审查基准。</div></div>
-      <div class="tl-item"><div class="date">2023.10</div><div class="txt">取得全球载人 eVTOL 领域首张型号合格证（TC），此后陆续取得标准适航证（AC）与生产许可证（PC）。</div></div>
-      <div class="tl-item"><div class="date">2025.03</div><div class="txt">获颁全国首批载人民用无人驾驶航空器运营合格证（OC），开启商业化载人服务，累计完成超 6.4 万架次安全飞行。</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 3 同类对比 ===================== -->
-<section id="compare">
-  <div class="wrap">
-    <div class="sec-tag">03 · 行业坐标</div>
-    <h2>代表性飞行汽车产品对比</h2>
-    <p class="sec-desc">不同产品在起降方式、动力路线、载人定位与取证进度上差异显著，EH216-S 代表“多旋翼 + 无人驾驶 + 封闭空域示范运营”的先行路径。</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>产品 / 型号</th><th>国家/企业</th><th>构型</th><th>定位</th><th>当前状态</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>EH216-S</b></td><td>中国 · 亿航智能</td><td>多旋翼纯飞式 eVTOL</td>
-            <td>2 座城市空中交通、文旅观光</td>
-            <td><span class="tag ok">已取证 · 示范商业运营</span></td>
-          </tr>
-          <tr>
-            <td>陆地航母</td><td>中国 · 小鹏汇天</td><td>分体式（陆行底盘 + 飞行体）</td>
-            <td>个人消费级陆空两栖出行</td>
-            <td><span class="tag warn">原型试飞 · 适航取证推进中</span></td>
-          </tr>
-          <tr>
-            <td>AirCar</td><td>斯洛伐克 · Klein Vision</td><td>固定翼滑跑起降、可公路行驶</td>
-            <td>跨城固定翼飞行汽车</td>
-            <td><span class="tag cool">完成跨城试飞 · 依赖跑道</span></td>
-          </tr>
-          <tr>
-            <td>Joby S4</td><td>美国 · Joby Aviation</td><td>倾转旋翼 eVTOL</td>
-            <td>城市空中出租车（UAM）</td>
-            <td><span class="tag warn">适航审查 · 试运营筹备</span></td>
-          </tr>
-          <tr>
-            <td>Lilium Jet</td><td>德国 · Lilium</td><td>涵道风扇倾转 eVTOL</td>
-            <td>区域空中出行</td>
-            <td><span class="tag warn">研发与融资阶段</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 4 技术可行性 ===================== -->
-<section id="tech">
-  <div class="wrap">
-    <div class="sec-tag">04 · 技术可行性分析</div>
-    <h2>样机已可行，规模化尚需跨越适航级门槛</h2>
-    <p class="sec-desc">整车技术架构可划分为动力技术域、平台技术域与交通技术域，关键技术涵盖动力推进、构型总体、安全飞行、智能驾驶与智慧管控五个方向。总体判断：<b>工程样机与封闭场景运行已经可行，但距离大规模、开放城市商业化运营仍有显著技术瓶颈。</b></p>
-
-    <div class="vs">
-      <div class="col good">
-        <h3>✅ 已具备可行性的部分</h3>
-        <ul>
-          <li><b>构型总体：</b>多旋翼、复合翼、倾转旋翼、折叠机翼、分体式等方案均完成样机验证，结构与机构专利方案成熟。</li>
-          <li><b>动力硬件：</b>电机、电池、电驱大量继承新能源汽车供应链；飞控、传感器、感知摄像头继承无人机技术，产业链同源度约 70%。</li>
-          <li><b>模态切换机构：</b>分动器、折叠机翼、分体分离机构已有专利与样机实现。</li>
-          <li><b>基础感知与验证工具链：</b>雷达、摄像头、GNSS 定位可实现障碍检测；基于模型的系统工程（MBSE）、FTA/FMEA/STPA 等安全仿真工具链成熟。</li>
-          <li><b>冗余安全架构：</b>三余度飞控、动力备份、表决机制与 Fail-Safe 应急降落已在 EH216-S 上落地验证。</li>
-        </ul>
-      </div>
-      <div class="col bad">
-        <h3>❌ 尚未完全突破的短板</h3>
-        <ul>
-          <li><b>载荷—航程瓶颈：</b>纯电机型普遍航程 30–50 km，规模化实用通常要求载荷 ≥100 kg、航程 ≥100 km，电池能量密度不足是核心制约。</li>
-          <li><b>适航安全跃升：</b>载人航空要求失效概率达 10⁻⁹ 量级并多重冗余；汽车三电与无人机飞控经验不能直接照搬，必须按适航体系系统级重构。</li>
-          <li><b>多维碰撞与环境鲁棒性：</b>纵/横/垂直坠落耐撞设计、空中起火处置、雷雨大风等恶劣气象适应性仍待成熟。</li>
-          <li><b>网络与信息安全：</b>电磁干扰、网络入侵、数据链路安全需要面向载人场景专项加固。</li>
-          <li><b>低空智能驾驶：</b>城市建筑遮挡 GNSS、风场乱流、障碍密集，全天候感知、复杂气象决策与高密度多机协同调度仍处验证阶段。</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="callout">
-      <b>技术同源但体系不等价：</b>新能源汽车体系擅长规模化、低成本，但安全可靠性标准面向地面交通；无人机经验多面向非载人应用。二者均可迁移运行与管控思路，但必须提升到载人航空安全等级，满足适航标准后才能进入载人飞行。经验迁移率仅约 20%–30%。
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 5 应用场景 ===================== -->
-<section id="scene">
-  <div class="wrap">
-    <div class="sec-tag">05 · 应用场景分析</div>
-    <h2>专业化与大众化双线并行</h2>
-    <p class="sec-desc">专业化应用以公共安全与行业效率为核心，从刚需场景逐步拓展至增值型行业应用；大众化应用以体验优化与交通补充为目标，由示范体验走向规模化运营。两条路径在技术、标准、空域与运营体系上高度耦合、相互反哺。</p>
-
-    <h3>专业化场景：社会价值先行 → 行业应用深耕</h3>
-    <div class="grid g4" style="margin-bottom:34px">
-      <div class="card"><div class="icon">🚑</div><h3>应急医疗转运</h3><p>山区、水域、道路损毁区域快速转运伤员与急救物资，争取黄金救援时间。</p></div>
-      <div class="card"><div class="icon">🧯</div><h3>消防救援</h3><p>高层建筑空中灭火、火情侦察与投送灭火剂，弥补登高救援短板。</p></div>
-      <div class="card"><div class="icon">📦</div><h3>特殊物流</h3><p>海岛、山地、偏远点位的应急与高端即时物资投送。</p></div>
-      <div class="card"><div class="icon">🌾</div><h3>农林植保与巡检</h3><p>农林作业、电力与油气管道巡检、测绘巡查等行业作业场景。</p></div>
-    </div>
-
-    <h3>大众化场景：四阶段渐进演进</h3>
-    <div class="steps">
-      <div class="step"><h3>低空文旅先行</h3><p>以观光体验切入，依托较低技术门槛与包容性政策，快速积累用户信任与运营数据（当前阶段，EH216-S 主要落于此）。</p></div>
-      <div class="step"><h3>枢纽接驳升级</h3><p>连接机场、高铁站等核心枢纽，实现“分钟级立体接驳”，成为城市交通网络的关键补充。</p></div>
-      <div class="step"><h3>区域交通突破</h3><p>在城市群间开展城际飞行，解决地面通勤痛点，推动适航标准与空域管理体系完善。</p></div>
-      <div class="step"><h3>城市交通成网</h3><p>形成规模化空中交通体系，与地面公交、轨道交通协同，实现“空地一体化”出行。</p></div>
-    </div>
-
-    <div class="callout">
-      <b>商业模式演进：</b>沿“产品—服务耦合期 → 闭环生态运营期”两阶段演化。当前以 G 端示范项目试水、B 端运营商购买封闭式服务为主；远期构建“基础设施 + 运输装备 + 全链条服务”三位一体生态，依托共享运营、电池银行、补能站、MaaS 订阅制与保险体系实现规模化盈利。
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 6 市场可行性 ===================== -->
-<section id="market">
-  <div class="wrap">
-    <div class="sec-tag">06 · 市场可行性分析</div>
-    <h2>长期潜力巨大，短期优先 B/G 端示范</h2>
-    <p class="sec-desc">飞行汽车是低空经济最具代表性、成长性与战略引领性的“主赛道”。整体判断：长期市场空间广阔，但短期不具备大规模消费市场爆发条件，商业机会优先集中于政府示范与行业运营场景，C 端个人消费仍处早期培育阶段。</p>
-
-    <div class="grid g2">
-      <div class="card">
-        <h3>利好条件</h3>
-        <div class="bars">
-          <div class="bar-row"><span class="name">政策红利</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><span class="val">国家战略</span></div>
-          <div class="bar-row"><span class="name">供应链基础</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="val">同源度约70%</span></div>
-          <div class="bar-row"><span class="name">社会需求</span><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div><span class="val">刚需明确</span></div>
-          <div class="bar-row"><span class="name">路径清晰度</span><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><span class="val">先B/G后C</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>制约因素</h3>
-        <div class="bars">
-          <div class="bar-row"><span class="name">制造成本</span><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div><span class="val">样机昂贵</span></div>
-          <div class="bar-row"><span class="name">产业链结构</span><div class="bar-track"><div class="bar-fill" style="width:68%"></div></div><span class="val">上下游偏弱</span></div>
-          <div class="bar-row"><span class="name">基础设施</span><div class="bar-track"><div class="bar-fill" style="width:74%"></div></div><span class="val">Vertiport缺口</span></div>
-          <div class="bar-row"><span class="name">法规体系</span><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><span class="val">仍在建设</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid g3" style="margin-top:26px">
-      <div class="card"><h3>市场规模</h3><p>多家机构预测低空经济远期达万亿级规模；飞行汽车赛道 2025–2030 年有望迎来商用爆发，大规模放量预计在 2030–2040 年区间，当前以示范与小批量交付为主。</p></div>
-      <div class="card"><h3>融资格局</h3><p>全球飞行汽车赛道融资约 100–120 亿美元，头部效应明显；代表融资包括 Joby 约 26 亿、Archer 约 15 亿、Lilium 约 8 亿、小鹏汇天约 5 亿美元，投资方以私募基金、大型 OEM 与科技巨头为主。</p></div>
-      <div class="card"><h3>产业链现状</h3><p>已初步覆盖材料、关键部件、整机制造与示范运营，完整的研发—适航—制造—运营闭环正在加速构建；但呈“中游强、上下游弱”的纺锤形格局，飞控软件、航电操作系统等上游关键系统仍待补强。</p></div>
-    </div>
-
-    <div class="callout">
-      <b>阶段性任务：</b>由研发验证迈向工程化阶段，当前核心任务不是“全面放量”，而是通过示范运营推动产业链协同成熟，为规模化商业化奠定基础。
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 7 瓶颈与伦理 ===================== -->
-<section id="bottleneck">
-  <div class="wrap">
-    <div class="sec-tag">07 · 规模化量产的核心阻碍</div>
-    <h2>安全、商业与伦理社会三重挑战</h2>
-    <p class="sec-desc">飞行汽车规模化并非单点突破，而是技术创新、产业应用与支撑保障体系协同演进的系统工程。其阻碍可归纳为安全、商业产业与伦理社会三个维度。</p>
-
-    <div class="bott">
-      <div class="card r">
-        <h3>🔒 安全问题（最核心瓶颈）</h3>
-        <ul>
-          <li>乘员保护与多维坠毁耐撞设计</li>
-          <li>雷雨大风等恶劣天气环境鲁棒性</li>
-          <li>障碍物碰撞规避与空中起火处置</li>
-          <li>飞控 / 动力失效故障的应急处置</li>
-          <li>网络入侵、电磁攻击等信息安全风险</li>
-          <li>高密度低空运行的搜索救援应急机制</li>
-        </ul>
-      </div>
-      <div class="card a">
-        <h3>🏭 商业产业问题</h3>
-        <ul>
-          <li>制造成本高，部分关键零部件依赖进口</li>
-          <li>飞行员 / 操控员培训体系尚未建立</li>
-          <li>商业运营牌照审批流程复杂</li>
-          <li>盈利模式不清晰，基建投资回报周期长</li>
-          <li>上下游配套薄弱，规模效应难以形成</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>⚖️ 伦理与社会问题</h3>
-        <ul>
-          <li>低空噪声对城市居民与生态的影响</li>
-          <li>摄像头与航线带来的隐私边界问题</li>
-          <li>事故责任归属（运营方 / 制造商 / 监管方）</li>
-          <li>公众接受度与信任培育</li>
-          <li>空域资源公平分配与城市空间治理</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 8 未来展望 ===================== -->
-<section id="future">
-  <div class="wrap">
-    <div class="sec-tag">08 · 未来研究方向与展望</div>
-    <h2>三大支柱协同，走向空地一体交通</h2>
-    <p class="sec-desc">产业应用、技术创新与支撑保障三者相互反馈、螺旋上升，共同支撑飞行汽车从示范验证迈向规模化发展。</p>
-
-    <div class="grid g3">
-      <div class="card">
-        <div class="icon">⚡</div>
-        <h3>能源与动力创新</h3>
-        <p>高能量密度电池、混动增程、氢能动力多元并行；提升功率密度与冗余架构，突破载荷—航程瓶颈。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🤖</div>
-        <h3>自主飞行与集群调度</h3>
-        <p>全天候环境感知、复杂气象规划决策，面向高密度空域的多机协同调度与自动化运行体系。</p>
-      </div>
-      <div class="card">
-        <div class="icon">📐</div>
-        <h3>适航标准与空域管理</h3>
-        <p>建立载人低空交通通用适航标准、动态空域划分与跨城协同机制，完善运营、人员、维修与保险法规。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🗼</div>
-        <h3>基础设施网络</h3>
-        <p>布局垂直起降场（Vertiport）、低空补能站与指挥调度网络，推动起降设施融入城市规划。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🏭</div>
-        <h3>车规—航规融合制造</h3>
-        <p>在继承汽车规模化制造优势的同时，按航空适航体系重构可靠性、冗余性与质量控制体系。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🌐</div>
-        <h3>生态与商业模式</h3>
-        <p>向 MaaS 立体出行平台演进，形成装备制造、共享运营、电池银行、数据服务与保险金融的闭环生态。</p>
-      </div>
-    </div>
-
-    <div class="callout">
-      <b>结论：</b>以 EH216-S 为代表的先行产品已经证明——在封闭、短途、低负荷场景下，载人 eVTOL 技术可行、商业可起步；但要成为融入城市日常的立体交通网络，仍需在能源密度、适航安全、智能调度、基建法规与社会接受度上持续突破。飞行汽车的成熟，是技术创新、产业应用与支撑保障长期协同演进的结果。
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 参考资料 ===================== -->
-<section id="refs">
-  <div class="wrap">
-    <div class="sec-tag">附录 · 参考资料</div>
-    <h2>调研依据</h2>
-    <ul class="refs">
-      <li>[1] 张玉新. 《飞行汽车技术基础》第四章 飞行汽车的现状及展望；第五章 飞行汽车产业分析及支撑技术. 吉林大学，2026.</li>
-      <li>[2] 中国民用航空局. 《亿航 EH216-S 型无人驾驶航空器系统专用条件》, 2022-02-09.</li>
-      <li>[3] 亿航智能官网. EH216-S 载人级自动驾驶航空器产品参数与安全设计说明.</li>
-      <li>[4] 新华网. 《“空中的士”飞入现实》, 2025-04-26（首批载人无人驾驶航空器运营合格证与累计架次数据）.</li>
-      <li>[5] 飞行汽车发展报告 2.0：迈向空地一体交通新时代（应用场景、商业模式、产业链与融资格局梳理）.</li>
-    </ul>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <b>Fundamentals of Flying Vehicle Technology · 2026</b><br>
-    课程作业：飞行汽车某技术/产品全方位调研与分析 ｜ 调研对象：亿航智能 EH216-S
-  </div>
-</footer>
-
-<button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到顶部">↑</button>
-
-<script>
-// 阅读进度条 + 回到顶部
-const prog=document.getElementById('progress'), toTop=document.getElementById('toTop');
-window.addEventListener('scroll',()=>{
-  const h=document.documentElement;
-  const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
-  prog.style.width=p+'%';
-  toTop.style.display=h.scrollTop>400?'flex':'none';
-});
-// 移动端菜单：点击链接后收起
-document.querySelectorAll('#menu a').forEach(a=>a.addEventListener('click',()=>document.getElementById('menu').classList.remove('open')));
-</script>
+    <footer>
+        课程作业 · 飞行汽车的全方位调研与分析 | 2026
+    </footer>
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', ()=>{
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const percent = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progress').style.width = percent + '%';
+        })
+    </script>
 </body>
 </html>
+
